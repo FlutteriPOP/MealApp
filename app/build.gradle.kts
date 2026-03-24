@@ -63,6 +63,9 @@ dependencies {
 //  coil
   implementation(libs.coil.compose)
   implementation(libs.androidx.material3)
+  
+  // YouTube Player
+  implementation(libs.youtube.player)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
@@ -71,6 +74,4 @@ dependencies {
   androidTestImplementation(libs.androidx.compose.ui.test.junit4)
   debugImplementation(libs.androidx.compose.ui.tooling)
   debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-
 }

@@ -2,23 +2,30 @@ package com.dev.mealapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Modern Culinary Palette
-val PrimaryFood = Color(0xFFF39C12) // Warm Orange/Gold
-val PrimaryDarkFood = Color(0xFFD35400)
-val PrimaryContainerFood = Color(0xFFFEF5E7)
-val OnPrimaryContainerFood = Color(0xFF7E5109)
+// Material 3 Expressive - High Contrast & Vibrant
+val PrimaryExpressive = Color(0xFF006A6A) // Deep Teal
+val OnPrimaryExpressive = Color(0xFFFFFFFF)
+val PrimaryContainerExpressive = Color(0xFF6FF6F6)
+val OnPrimaryContainerExpressive = Color(0xFF002020)
 
-val SecondaryFood = Color(0xFF27AE60) // Fresh Green
-val SecondaryContainerFood = Color(0xFFE9F7EF)
-val OnSecondaryContainerFood = Color(0xFF186A3B)
+val SecondaryExpressive = Color(0xFF4A6363)
+val SecondaryContainerExpressive = Color(0xFFCCE8E7)
 
-val TertiaryFood = Color(0xFFE74C3C) // Tomato Red
+val TertiaryExpressive = Color(0xFF4B607C) // Cool Blue
+val TertiaryContainerExpressive = Color(0xFFD3E4FF)
 
-val BackgroundLight = Color(0xFFFDFDFD)
-val SurfaceLight = Color(0xFFFFFFFF)
+val ErrorExpressive = Color(0xFFBA1A1A)
 
-val BackgroundDark = Color(0xFF121212)
-val SurfaceDark = Color(0xFF1E1E1E)
+val BackgroundExpressive = Color(0xFFF4FBFA) // Very light teal tint
+val SurfaceExpressive = Color(0xFFF4FBFA)
 
-val TextPrimary = Color(0xFF2C3E50)
-val TextSecondary = Color(0xFF7F8C8D)
+val BackgroundDark = Color(0xFF191C1C)
+val SurfaceDark = Color(0xFF191C1C)
+
+val TextPrimary = Color(0xFF191C1C)
+
+val OutlineExpressive = Color(0xFF6F7979)
+
+// Accent for "Expressive" feel (Food oriented)
+val FoodAccent = Color(0xFFFF5400) // Vibrant Orange
+val OnFoodAccent = Color(0xFFFFFFFF)

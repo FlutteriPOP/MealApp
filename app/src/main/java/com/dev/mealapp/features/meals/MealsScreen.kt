@@ -1,11 +1,16 @@
 package com.dev.mealapp.features.meals
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,13 +24,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.dev.mealapp.data.model.Meal
 import com.dev.mealapp.ui.components.ErrorView
@@ -40,37 +48,51 @@ fun MealsScreen(
     onMealClick: (Meal) -> Unit
 ) {
     val viewState by viewModel.mealsState.collectAsState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     LaunchedEffect(categoryName) {
         viewModel.fetchMealsByCategory(categoryName)
     }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
                         categoryName,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 navigationIcon = {
-                    IconButton(
+                    Surface(
                         onClick = onBackClick,
                         modifier = Modifier
-                            .padding(start = 8.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                            .padding(start = 12.dp)
+                            .size(44.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        tonalElevation = 2.dp
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack, 
+                                contentDescription = "Back",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground
-                )
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    navigationIconContentColor = Color.Unspecified,
+                    titleContentColor = Color.Unspecified,
+                    actionIconContentColor = Color.Unspecified
+                ),
+                scrollBehavior = scrollBehavior
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -104,7 +126,7 @@ fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -114,7 +136,7 @@ fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
             
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn(tween(500, index * 30)) + slideInVertically(tween(500, index * 30)) { it / 2 }
+                enter = fadeIn(tween(600, index * 30)) + slideInVertically(tween(600, index * 30)) { it / 3 }
             ) {
                 MealCard(meal = meal, onClick = { onMealClick(meal) })
             }
@@ -124,18 +146,29 @@ fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
 
 @Composable
 fun MealCard(meal: Meal, onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.96f else 1f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy),
+        label = "scale"
+    )
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
+            .height(260.dp)
+            .scale(scale)
             .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(24.dp),
-                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                elevation = if (isPressed) 4.dp else 12.dp,
+                shape = RoundedCornerShape(28.dp),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
             ),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        onClick = onClick
+        onClick = onClick,
+        interactionSource = interactionSource
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
@@ -150,15 +183,22 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f)),
-                            startY = 300f
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.2f),
+                                Color.Black.copy(alpha = 0.8f)
+                            ),
+                            startY = 350f
                         )
                     )
             )
 
             Text(
                 text = meal.strMeal,
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    lineHeight = 22.sp
+                ),
                 color = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomStart)

@@ -12,31 +12,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryFood,
-    secondary = SecondaryFood,
-    tertiary = TertiaryFood,
+    primary = PrimaryExpressive,
+    onPrimary = OnPrimaryExpressive,
+    primaryContainer = OnPrimaryContainerExpressive,
+    onPrimaryContainer = PrimaryContainerExpressive,
+    secondary = SecondaryExpressive,
+    onSecondary = Color.White,
+    secondaryContainer = SecondaryContainerExpressive,
+    tertiary = TertiaryExpressive,
+    onTertiary = Color.White,
+    tertiaryContainer = TertiaryContainerExpressive,
     background = BackgroundDark,
     surface = SurfaceDark,
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onTertiary = Color.Black,
     onBackground = Color.White,
     onSurface = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryFood,
-    onPrimary = Color.White,
-    primaryContainer = PrimaryContainerFood,
-    onPrimaryContainer = OnPrimaryContainerFood,
-    secondary = SecondaryFood,
+    primary = PrimaryExpressive,
+    onPrimary = OnPrimaryExpressive,
+    primaryContainer = PrimaryContainerExpressive,
+    onPrimaryContainer = OnPrimaryContainerExpressive,
+    secondary = SecondaryExpressive,
     onSecondary = Color.White,
-    secondaryContainer = SecondaryContainerFood,
-    tertiary = TertiaryFood,
-    background = BackgroundLight,
-    surface = SurfaceLight,
+    secondaryContainer = SecondaryContainerExpressive,
+    tertiary = TertiaryExpressive,
+    onTertiary = Color.White,
+    tertiaryContainer = TertiaryContainerExpressive,
+    background = BackgroundExpressive,
+    surface = SurfaceExpressive,
     onBackground = TextPrimary,
     onSurface = TextPrimary,
+    outline = OutlineExpressive
 )
 
 @Composable
