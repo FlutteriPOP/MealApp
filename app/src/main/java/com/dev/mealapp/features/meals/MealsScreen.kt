@@ -11,7 +11,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -19,11 +26,25 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
@@ -78,7 +99,7 @@ fun MealsScreen(
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack, 
+                                Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Back",
                                 modifier = Modifier.size(24.dp)
                             )
@@ -106,6 +127,7 @@ fun MealsScreen(
                 viewState.loading -> {
                     LoadingView(Modifier.align(Alignment.Center))
                 }
+
                 viewState.error != null -> {
                     ErrorView(
                         error = viewState.error ?: "Unknown error",
@@ -113,6 +135,7 @@ fun MealsScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     MealGrid(meals = viewState.list, onMealClick = onMealClick)
                 }
@@ -133,10 +156,15 @@ fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
         itemsIndexed(meals) { index, meal ->
             var visible by remember { mutableStateOf(false) }
             LaunchedEffect(Unit) { visible = true }
-            
+
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn(tween(600, index * 30)) + slideInVertically(tween(600, index * 30)) { it / 3 }
+                enter = fadeIn(tween(600, index * 30)) + slideInVertically(
+                    tween(
+                        600,
+                        index * 30
+                    )
+                ) { it / 3 }
             ) {
                 MealCard(meal = meal, onClick = { onMealClick(meal) })
             }
@@ -148,7 +176,7 @@ fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
 fun MealCard(meal: Meal, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.96f else 1f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy),
@@ -177,7 +205,7 @@ fun MealCard(meal: Meal, onClick: () -> Unit) {
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()

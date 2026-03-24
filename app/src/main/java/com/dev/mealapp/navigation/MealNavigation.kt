@@ -1,10 +1,6 @@
 package com.dev.mealapp.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -23,6 +19,7 @@ sealed class Screen(val route: String) {
     object Meals : Screen("meals/{categoryName}") {
         fun createRoute(categoryName: String) = "meals/$categoryName"
     }
+
     object MealDetail : Screen("mealDetail/{mealId}") {
         fun createRoute(mealId: String) = "mealDetail/$mealId"
     }
@@ -35,20 +32,15 @@ fun MealNavHost(navController: NavHostController) {
         startDestination = Screen.Categories.route
     ) {
         composable(Screen.Categories.route) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                containerColor = MaterialTheme.colorScheme.background
-            ) { innerPadding ->
-                val categoriesViewModel: CategoriesViewModel = viewModel()
-                CategoriesScreen(
-                    viewModel = categoriesViewModel,
-                    onCategoryClick = { category ->
-                        navController.navigate(Screen.Meals.createRoute(category.strCategory))
-                    }
-                )
-            }
+            val categoriesViewModel: CategoriesViewModel = viewModel()
+            CategoriesScreen(
+                viewModel = categoriesViewModel,
+                onCategoryClick = { category ->
+                    navController.navigate(Screen.Meals.createRoute(category.strCategory))
+                }
+            )
         }
-        
+
         composable(
             route = Screen.Meals.route,
             arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
@@ -64,7 +56,7 @@ fun MealNavHost(navController: NavHostController) {
                 }
             )
         }
-        
+
         composable(
             route = Screen.MealDetail.route,
             arguments = listOf(navArgument("mealId") { type = NavType.StringType })

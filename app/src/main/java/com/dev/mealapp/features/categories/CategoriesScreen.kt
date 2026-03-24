@@ -81,7 +81,7 @@ fun CategoriesScreen(
                         )
                         Text(
                             "to cook today?",
-                            style = MaterialTheme.typography.displaySmall,
+                            style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary,
                             letterSpacing = (-1).sp
@@ -107,6 +107,7 @@ fun CategoriesScreen(
                 viewState.loading -> {
                     LoadingView(Modifier.align(Alignment.Center))
                 }
+
                 viewState.error != null -> {
                     ErrorView(
                         error = viewState.error ?: "Unknown error",
@@ -114,6 +115,7 @@ fun CategoriesScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     CategoryGrid(categories = viewState.list, onCategoryClick = onCategoryClick)
                 }
@@ -138,7 +140,12 @@ fun CategoryGrid(categories: List<Category>, onCategoryClick: (Category) -> Unit
             }
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn(animationSpec = tween(durationMillis = 600, delayMillis = index * 40)) +
+                enter = fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 600,
+                        delayMillis = index * 40
+                    )
+                ) +
                         slideInVertically(
                             animationSpec = tween(durationMillis = 600, delayMillis = index * 40),
                             initialOffsetY = { it / 3 }
@@ -154,7 +161,7 @@ fun CategoryGrid(categories: List<Category>, onCategoryClick: (Category) -> Unit
 fun CategoryCard(category: Category, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.96f else 1f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy),
@@ -185,7 +192,7 @@ fun CategoryCard(category: Category, onClick: () -> Unit) {
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
