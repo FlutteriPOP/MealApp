@@ -212,11 +212,7 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         textColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
-                    BadgeExpressive(
-                        text = meal.strArea,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        textColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
+
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -282,21 +278,35 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Header Info - Ingredients
-                Column {
-                    Text(
-                        "Ingredients",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        "${ingredients.size} items to prepare",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.SemiBold
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+
+                ) {
+                    // Header Info - Ingredients
+                    Column {
+                        Text(
+                            "Ingredients",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            "${ingredients.size} items to prepare",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    BadgeExpressive(
+                        text = meal.strArea,
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
+
+
 
                 Spacer(modifier = Modifier.height(20.dp))
                 IngredientsListExpressive(ingredients)

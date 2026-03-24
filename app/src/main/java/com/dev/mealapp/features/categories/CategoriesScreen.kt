@@ -32,7 +32,12 @@ fun CategoriesScreen(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { AppBars.CategoriesAppBar(onSearchClick = onSearchClick) },
+        topBar = { 
+            AppBars.CategoriesAppBar(
+                onSearchClick = onSearchClick,
+                scrollBehavior = scrollBehavior
+            ) 
+        },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Box(modifier = Modifier

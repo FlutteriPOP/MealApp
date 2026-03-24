@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +30,8 @@ object AppBars {
     fun MealAppBar(
         title: String,
         onBackClick: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        scrollBehavior: TopAppBarScrollBehavior? = null
     ) {
         CenterAlignedTopAppBar(
             title = {
@@ -66,7 +68,8 @@ object AppBars {
                 titleContentColor = MaterialTheme.colorScheme.onBackground,
                 actionIconContentColor = Color.Unspecified
             ),
-            modifier = modifier
+            modifier = modifier,
+            scrollBehavior = scrollBehavior
         )
     }
 
@@ -74,7 +77,8 @@ object AppBars {
     @Composable
     fun CategoriesAppBar(
         onSearchClick: () -> Unit,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        scrollBehavior: TopAppBarScrollBehavior? = null
     ) {
         LargeTopAppBar(
             title = {
@@ -110,7 +114,8 @@ object AppBars {
                 titleContentColor = MaterialTheme.colorScheme.onBackground,
                 actionIconContentColor = Color.Unspecified
             ),
-            modifier = modifier
+            modifier = modifier,
+            scrollBehavior = scrollBehavior
         )
     }
 }
