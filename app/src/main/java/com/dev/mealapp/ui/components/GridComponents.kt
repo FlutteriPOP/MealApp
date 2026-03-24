@@ -55,7 +55,7 @@ fun CategoryGrid(categories: List<Category>, onCategoryClick: (Category) -> Unit
 }
 
 @Composable
-fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
+fun MealGrid(meals: List<Meal>?, onMealClick: (Meal) -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize(),
@@ -63,7 +63,7 @@ fun MealGrid(meals: List<Meal>, onMealClick: (Meal) -> Unit) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        itemsIndexed(meals) { index, meal ->
+        itemsIndexed(meals ?: emptyList()) { index, meal ->
             var visible by remember { mutableStateOf(false) }
             LaunchedEffect(Unit) { visible = true }
 

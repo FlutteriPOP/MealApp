@@ -33,7 +33,7 @@ class MealsViewModel : ViewModel() {
 
     data class MealsState(
         val loading: Boolean = false,
-        val list: List<Meal> = emptyList(),
+        val list: List<Meal>? = emptyList(),
         val error: String? = null
     )
 }

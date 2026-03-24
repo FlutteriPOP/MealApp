@@ -13,6 +13,8 @@ import com.dev.mealapp.features.mealdetail.MealDetailScreen
 import com.dev.mealapp.features.mealdetail.MealDetailViewModel
 import com.dev.mealapp.features.meals.MealsScreen
 import com.dev.mealapp.features.meals.MealsViewModel
+import com.dev.mealapp.features.search.SearchScreen
+import com.dev.mealapp.features.search.SearchViewModel
 
 sealed class Screen(val route: String) {
     object Categories : Screen("categories")
@@ -23,6 +25,8 @@ sealed class Screen(val route: String) {
     object MealDetail : Screen("mealDetail/{mealId}") {
         fun createRoute(mealId: String) = "mealDetail/$mealId"
     }
+
+    object Search : Screen("search")
 }
 
 @Composable
@@ -37,6 +41,9 @@ fun MealNavHost(navController: NavHostController) {
                 viewModel = categoriesViewModel,
                 onCategoryClick = { category ->
                     navController.navigate(Screen.Meals.createRoute(category.strCategory))
+                },
+                onSearchClick = {
+                    navController.navigate(Screen.Search.route)
                 }
             )
         }
@@ -67,6 +74,17 @@ fun MealNavHost(navController: NavHostController) {
                 mealId = mealId,
                 viewModel = mealDetailViewModel,
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Search.route) {
+            val searchViewModel: SearchViewModel = viewModel()
+            SearchScreen(
+                viewModel = searchViewModel,
+                onBackClick = { navController.popBackStack() },
+                onMealClick = { meal ->
+                    navController.navigate(Screen.MealDetail.createRoute(meal.idMeal))
+                }
             )
         }
     }

@@ -23,29 +23,34 @@ import com.dev.mealapp.ui.components.LoadingView
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
-        viewModel: CategoriesViewModel = viewModel(),
-        onCategoryClick: (Category) -> Unit
+    viewModel: CategoriesViewModel = viewModel(),
+    onCategoryClick: (Category) -> Unit,
+    onSearchClick: () -> Unit
 ) {
     val viewState by viewModel.categoriesState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = { AppBars.CategoriesAppBar() },
-            containerColor = MaterialTheme.colorScheme.background
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = { AppBars.CategoriesAppBar(onSearchClick = onSearchClick) },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)) {
             when {
                 viewState.loading -> {
                     LoadingView(Modifier.align(Alignment.Center))
                 }
+
                 viewState.error != null -> {
                     ErrorView(
-                            error = viewState.error ?: "Unknown error",
-                            onRetry = { viewModel.fetchCategories() },
-                            modifier = Modifier.align(Alignment.Center)
+                        error = viewState.error ?: "Unknown error",
+                        onRetry = { viewModel.fetchCategories() },
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     CategoryGrid(categories = viewState.list, onCategoryClick = onCategoryClick)
                 }

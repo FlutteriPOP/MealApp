@@ -23,10 +23,10 @@ import com.dev.mealapp.ui.components.MealGrid
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealsScreen(
-        categoryName: String,
-        viewModel: MealsViewModel,
-        onBackClick: () -> Unit,
-        onMealClick: (Meal) -> Unit
+    categoryName: String,
+    viewModel: MealsViewModel,
+    onBackClick: () -> Unit,
+    onMealClick: (Meal) -> Unit
 ) {
     val viewState by viewModel.mealsState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -34,22 +34,26 @@ fun MealsScreen(
     LaunchedEffect(categoryName) { viewModel.fetchMealsByCategory(categoryName) }
 
     Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = { AppBars.MealAppBar(title = categoryName, onBackClick = onBackClick) },
-            containerColor = MaterialTheme.colorScheme.background
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = { AppBars.MealAppBar(title = categoryName, onBackClick = onBackClick) },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)) {
             when {
                 viewState.loading -> {
                     LoadingView(Modifier.align(Alignment.Center))
                 }
+
                 viewState.error != null -> {
                     ErrorView(
-                            error = viewState.error ?: "Unknown error",
-                            onRetry = { viewModel.fetchMealsByCategory(categoryName) },
-                            modifier = Modifier.align(Alignment.Center)
+                        error = viewState.error ?: "Unknown error",
+                        onRetry = { viewModel.fetchMealsByCategory(categoryName) },
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     MealGrid(meals = viewState.list, onMealClick = onMealClick)
                 }

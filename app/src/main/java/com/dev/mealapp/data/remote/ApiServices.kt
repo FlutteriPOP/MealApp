@@ -33,6 +33,12 @@ interface ApiServices {
 
     @GET("lookup.php")
     suspend fun getMealDetails(@Query("i") mealId: String): MealDetailResponse
+
+    @GET("search.php")
+    suspend fun searchMeals(@Query("s") query: String): MealsResponse
+
+    @GET("random.php")
+    suspend fun getRandomMeal(): MealDetailResponse
 }
 
 val recipeService: ApiServices = retrofit.create(ApiServices::class.java)

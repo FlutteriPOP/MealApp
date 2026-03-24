@@ -24,7 +24,8 @@ android {
 
   buildTypes {
     release {
-      isMinifyEnabled = false
+      isMinifyEnabled = true
+      isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
@@ -63,8 +64,9 @@ dependencies {
 //  coil
   implementation(libs.coil.compose)
   implementation(libs.androidx.material3)
-  
+
   // YouTube Player
+
   implementation(libs.youtube.player)
 
   testImplementation(libs.junit)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -72,6 +73,7 @@ object AppBars {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CategoriesAppBar(
+        onSearchClick: () -> Unit,
         modifier: Modifier = Modifier
     ) {
         LargeTopAppBar(
@@ -89,6 +91,15 @@ object AppBars {
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.primary,
                         letterSpacing = (-1).sp
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = onSearchClick) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             },

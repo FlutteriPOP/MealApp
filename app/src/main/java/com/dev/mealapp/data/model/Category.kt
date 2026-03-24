@@ -22,7 +22,7 @@ data class Meal(
 )
 
 data class MealsResponse(
-    val meals: List<Meal>
+    val meals: List<Meal>?
 )
 
 data class MealDetail(
@@ -82,5 +82,5 @@ data class MealDetail(
 )
 
 data class MealDetailResponse(
-    val meals: List<MealDetail>
+    val meals: List<MealDetail>?
 )

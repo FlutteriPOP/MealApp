@@ -19,7 +19,7 @@ class MealDetailViewModel : ViewModel() {
             try {
                 val response = recipeService.getMealDetails(mealId)
                 _mealDetailState.value = MealDetailState(
-                    mealDetail = response.meals.firstOrNull(),
+                    mealDetail = response.meals?.firstOrNull(),
                     loading = false
                 )
             } catch (e: Exception) {
