@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
+  id("kotlin-parcelize")
 }
 
 android {
@@ -31,6 +32,7 @@ android {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
+
   buildFeatures {
     compose = true
   }
@@ -45,13 +47,18 @@ dependencies {
   implementation(libs.androidx.compose.ui.graphics)
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.material.icons.extended)
 
 //  compose Viewmodel
   implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+//  navigation
+  implementation(libs.androidx.navigation.compose)
+
 //  retrofit
   implementation(libs.retrofit)
   implementation(libs.converter.gson)
+  implementation(libs.logging.interceptor)
 
 //  coil
   implementation(libs.coil.compose)

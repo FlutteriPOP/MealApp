@@ -2,17 +2,23 @@ package com.dev.mealapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Food inspired theme - Primary Orange
-val Orange80 = Color(0xFFFFB74D)
-val OrangeGrey80 = Color(0xFFCCC2DC)
-val DeepOrange80 = Color(0xFFFFCCBC)
+// Modern Culinary Palette
+val PrimaryFood = Color(0xFFF39C12) // Warm Orange/Gold
+val PrimaryDarkFood = Color(0xFFD35400)
+val PrimaryContainerFood = Color(0xFFFEF5E7)
+val OnPrimaryContainerFood = Color(0xFF7E5109)
 
-val Orange40 = Color(0xFFF57C00)
-val OrangeGrey40 = Color(0xFF625b71)
-val DeepOrange40 = Color(0xFFBF360C)
+val SecondaryFood = Color(0xFF27AE60) // Fresh Green
+val SecondaryContainerFood = Color(0xFFE9F7EF)
+val OnSecondaryContainerFood = Color(0xFF186A3B)
 
-// Custom UI Colors
-val AppBackground = Color(0xFFFFF8F1)
-val SurfaceColor = Color(0xFFFFFFFF)
-val TextMain = Color(0xFF2D2D2D)
-val TextSecondary = Color(0xFF757575)
+val TertiaryFood = Color(0xFFE74C3C) // Tomato Red
+
+val BackgroundLight = Color(0xFFFDFDFD)
+val SurfaceLight = Color(0xFFFFFFFF)
+
+val BackgroundDark = Color(0xFF121212)
+val SurfaceDark = Color(0xFF1E1E1E)
+
+val TextPrimary = Color(0xFF2C3E50)
+val TextSecondary = Color(0xFF7F8C8D)
