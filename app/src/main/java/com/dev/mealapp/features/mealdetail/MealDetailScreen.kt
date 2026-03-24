@@ -1,6 +1,7 @@
 package com.dev.mealapp.features.mealdetail
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -112,22 +113,35 @@ fun MealDetailContent(meal: MealDetail) {
                 .fillMaxWidth()
                 .aspectRatio(1.1f)
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(meal.strMealThumb),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .scale(imageScale),
-                contentScale = ContentScale.Crop
-            )
-            
-            if (!meal.strYoutube.isNullOrBlank()) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    YoutubePlayer(
-                        youtubeUrl = meal.strYoutube,
-                        modifier = Modifier.fillMaxSize(),
-                        onReady = { isVideoReady = true }
+            Crossfade(targetState = isVideoReady && !meal.strYoutube.isNullOrBlank(), label = "video_crossfade") { isReady ->
+                if (isReady) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        YoutubePlayer(
+                            youtubeUrl = meal.strYoutube!!,
+                            modifier = Modifier.fillMaxSize(),
+                            onReady = { isVideoReady = true }
+                        )
+                    }
+                } else {
+                    Image(
+                        painter = rememberAsyncImagePainter(meal.strMealThumb),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .scale(imageScale),
+                        contentScale = ContentScale.Crop
                     )
+                    
+                    // Hidden preloading of YoutubePlayer to trigger onReady
+                    if (!meal.strYoutube.isNullOrBlank()) {
+                        Box(modifier = Modifier.size(1.dp).clip(CircleShape)) {
+                            YoutubePlayer(
+                                youtubeUrl = meal.strYoutube,
+                                modifier = Modifier.fillMaxSize(),
+                                onReady = { isVideoReady = true }
+                            )
+                        }
+                    }
                 }
             }
 
@@ -152,15 +166,15 @@ fun MealDetailContent(meal: MealDetail) {
                     .padding(bottom = 32.dp)
             ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    BadgeExpressive(text = meal.strCategory, containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), textColor = Color.White)
-                    BadgeExpressive(text = meal.strArea, containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f), textColor = Color.White)
+                    BadgeExpressive(text = meal.strCategory, containerColor = MaterialTheme.colorScheme.primary, textColor = MaterialTheme.colorScheme.onPrimary)
+                    BadgeExpressive(text = meal.strArea, containerColor = MaterialTheme.colorScheme.secondary, textColor = MaterialTheme.colorScheme.onSecondary)
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = meal.strMeal,
                     style = MaterialTheme.typography.displaySmall,
                     color = Color.White,
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Bold,
                     lineHeight = 38.sp
                 )
             }
@@ -172,7 +186,7 @@ fun MealDetailContent(meal: MealDetail) {
                 .fillMaxWidth()
                 .offset(y = (-32).dp),
             shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.surface
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
@@ -182,7 +196,7 @@ fun MealDetailContent(meal: MealDetail) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(20.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
@@ -198,14 +212,14 @@ fun MealDetailContent(meal: MealDetail) {
                     Text(
                         "Ingredients",
                         style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         "${getIngredientsCount(meal)} items to prepare",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
 
@@ -218,16 +232,15 @@ fun MealDetailContent(meal: MealDetail) {
                 Text(
                     "Method",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-                    border = CardDefaults.outlinedCardBorder().copy(brush = Brush.linearGradient(listOf(MaterialTheme.colorScheme.outlineVariant, Color.Transparent)))
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
                 ) {
                     Column(
                         modifier = Modifier
@@ -242,7 +255,7 @@ fun MealDetailContent(meal: MealDetail) {
                                     lineHeight = 28.sp,
                                     letterSpacing = 0.5.sp
                                 ),
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f),
+                                color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = if (isExpanded) Int.MAX_VALUE else 5,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -256,7 +269,7 @@ fun MealDetailContent(meal: MealDetail) {
                                 text = if (isExpanded) "Show Less" else "Show Full Recipe",
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.ExtraBold
+                                fontWeight = FontWeight.Bold
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
@@ -288,7 +301,7 @@ fun QuickInfoItem(icon: ImageVector, value: String, label: String) {
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.ExtraBold,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
@@ -330,7 +343,7 @@ fun IngredientsListExpressive(meal: MealDetail) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -350,14 +363,14 @@ fun IngredientsListExpressive(meal: MealDetail) {
                     Text(
                         ingredient!!, 
                         style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
                 Text(
                     measure ?: "", 
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.primary, 
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
