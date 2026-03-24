@@ -11,39 +11,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryExpressive,
-    onPrimary = OnPrimaryExpressive,
-    primaryContainer = OnPrimaryContainerExpressive,
-    onPrimaryContainer = PrimaryContainerExpressive,
-    secondary = SecondaryExpressive,
-    onSecondary = Color.White,
-    secondaryContainer = SecondaryContainerExpressive,
-    tertiary = TertiaryExpressive,
-    onTertiary = Color.White,
-    tertiaryContainer = TertiaryContainerExpressive,
-    background = BackgroundDark,
-    surface = SurfaceDark,
-    onBackground = Color.White,
-    onSurface = Color.White
+private val LightColors = lightColorScheme(
+    primary = Primary,
+    onPrimary = OnPrimary,
+    primaryContainer = PrimaryContainer,
+    onPrimaryContainer = OnPrimaryContainer,
+    secondary = Secondary,
+    onSecondary = OnSecondary,
+    secondaryContainer = SecondaryContainer,
+    onSecondaryContainer = OnSecondaryContainer,
+    tertiary = Tertiary,
+    onTertiary = OnTertiary,
+    tertiaryContainer = TertiaryContainer,
+    onTertiaryContainer = OnTertiaryContainer,
+    background = Background,
+    onBackground = OnBackground,
+    surface = Surface,
+    onSurface = OnSurface,
+    outline = Outline,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = PrimaryExpressive,
-    onPrimary = OnPrimaryExpressive,
-    primaryContainer = PrimaryContainerExpressive,
-    onPrimaryContainer = OnPrimaryContainerExpressive,
-    secondary = SecondaryExpressive,
-    onSecondary = Color.White,
-    secondaryContainer = SecondaryContainerExpressive,
-    tertiary = TertiaryExpressive,
-    onTertiary = Color.White,
-    tertiaryContainer = TertiaryContainerExpressive,
-    background = BackgroundExpressive,
-    surface = SurfaceExpressive,
-    onBackground = TextPrimary,
-    onSurface = TextPrimary,
-    outline = OutlineExpressive
+private val DarkColors = darkColorScheme(
+    primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = OnPrimaryContainerDark,
+    secondary = SecondaryDark,
+    onSecondary = OnSecondaryDark,
+    secondaryContainer = SecondaryContainerDark,
+    onSecondaryContainer = OnSecondaryContainerDark,
+    tertiary = TertiaryDark,
+    onTertiary = OnTertiaryDark,
+    tertiaryContainer = TertiaryContainerDark,
+    onTertiaryContainer = OnTertiaryContainerDark,
+    background = BackgroundDark,
+    onBackground = OnBackgroundDark,
+    surface = SurfaceDark,
+    onSurface = OnSurfaceDark,
+    outline = OutlineDark,
 )
 
 @Composable
@@ -58,8 +63,8 @@ fun MealAppTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> DarkColors
+        else -> LightColors
     }
 
     MaterialTheme(

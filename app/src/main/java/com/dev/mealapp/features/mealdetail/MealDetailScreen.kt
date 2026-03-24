@@ -2,7 +2,9 @@ package com.dev.mealapp.features.mealdetail
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Timer
@@ -46,13 +49,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -101,16 +108,17 @@ fun MealDetailScreen(
                 }
             }
 
-            // Floating Back Button
+            // Floating Back Button with Glassmorphism
             Surface(
                 onClick = onBackClick,
                 modifier = Modifier
                     .statusBarsPadding()
                     .padding(16.dp)
-                    .size(44.dp),
+                    .size(48.dp),
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-                tonalElevation = 6.dp
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                tonalElevation = 8.dp,
+                shadowElevation = 4.dp
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
@@ -140,11 +148,14 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        // Header Section with Video/Image
+        // Enhanced Parallax Header Section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1.1f)
+                .aspectRatio(1f)
+                .graphicsLayer {
+                    translationY = scrollState.value * 0.5f
+                }
         ) {
             val hasVideo = !meal.strYoutube.isNullOrBlank()
             Crossfade(
@@ -169,7 +180,6 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                         contentScale = ContentScale.Crop
                     )
 
-                    // Hidden preloading of YoutubePlayer to trigger onReady
                     if (hasVideo) {
                         Box(
                             modifier = Modifier
@@ -192,9 +202,9 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                     .background(
                         Brush.verticalGradient(
                             listOf(
-                                Color.Black.copy(alpha = 0.3f),
+                                Color.Black.copy(alpha = 0.2f),
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.7f)
+                                Color.Black.copy(alpha = 0.8f)
                             )
                         )
                     )
@@ -204,42 +214,40 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(24.dp)
-                    .padding(bottom = 32.dp)
+                    .padding(bottom = 48.dp)
             ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    BadgeExpressive(
-                        text = meal.strCategory,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-
-                }
+                BadgeExpressive(
+                    text = meal.strCategory,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = meal.strMeal,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        lineHeight = 36.sp,
+                        letterSpacing = (-0.5).sp
+                    ),
                     color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 38.sp
+                    fontWeight = FontWeight.ExtraBold
                 )
             }
         }
 
-        // Content Section
+        // Refined Content Section
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = (-32).dp),
-            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-            color = MaterialTheme.colorScheme.surface
+                .offset(y = (-40).dp),
+            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 2.dp
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
             ) {
-                // Quick Info Row - Dynamically calculated
                 val estimatedTime = remember(ingredients) { "${ingredients.size * 5 + 10} min" }
-                val estimatedCalories =
-                    remember(ingredients) { "${ingredients.size * 45 + 100} kcal" }
+                val estimatedCalories = remember(ingredients) { "${ingredients.size * 45 + 100} kcal" }
                 val difficulty = remember(ingredients) {
                     when {
                         ingredients.size > 12 -> "Hard"
@@ -248,32 +256,18 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                     }
                 }
 
+                // Premium Quick Info Card
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                        .padding(16.dp),
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                        .padding(vertical = 20.dp, horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    QuickInfoItem(
-                        Icons.Default.Timer,
-                        estimatedTime,
-                        "Time",
-                        MaterialTheme.colorScheme.primary
-                    )
-                    QuickInfoItem(
-                        Icons.Default.Whatshot,
-                        estimatedCalories,
-                        "Calories",
-                        MaterialTheme.colorScheme.error
-                    )
-                    QuickInfoItem(
-                        Icons.Default.KeyboardArrowUp,
-                        difficulty,
-                        "Level",
-                        MaterialTheme.colorScheme.secondary
-                    )
+                    QuickInfoItem(Icons.Default.Timer, estimatedTime, "Time", MaterialTheme.colorScheme.primary)
+                    QuickInfoItem(Icons.Default.Whatshot, estimatedCalories, "Calories", MaterialTheme.colorScheme.error)
+                    QuickInfoItem(Icons.Default.KeyboardArrowUp, difficulty, "Level", MaterialTheme.colorScheme.secondary)
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -282,54 +276,48 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
-
                 ) {
-                    // Header Info - Ingredients
                     Column {
                         Text(
                             "Ingredients",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             "${ingredients.size} items to prepare",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.SemiBold
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
                     BadgeExpressive(
                         text = meal.strArea,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                        textColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
-
-
 
                 Spacer(modifier = Modifier.height(20.dp))
                 IngredientsListExpressive(ingredients)
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Method Section
                 Text(
                     "Method",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(28.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerLow,
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(20.dp)
+                            .padding(24.dp)
                             .animateContentSize()
                             .clickable { isExpanded = !isExpanded }
                     ) {
@@ -337,37 +325,37 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                             Text(
                                 text = meal.strInstructions,
                                 style = MaterialTheme.typography.bodyLarge.copy(
-                                    lineHeight = 28.sp,
-                                    letterSpacing = 0.5.sp
+                                    lineHeight = 30.sp,
+                                    letterSpacing = 0.2.sp
                                 ),
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = if (isExpanded) Int.MAX_VALUE else 5,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = if (isExpanded) Int.MAX_VALUE else 6,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
 
                         Row(
-                            modifier = Modifier.padding(top = 16.dp),
+                            modifier = Modifier.padding(top = 20.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = if (isExpanded) "Show Less" else "Show Full Recipe",
+                                text = if (isExpanded) "Show Less" else "Read Full Recipe",
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.ExtraBold
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
                             Icon(
                                 imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(18.dp)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(120.dp))
             }
         }
     }
@@ -376,69 +364,120 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
 @Composable
 fun QuickInfoItem(icon: ImageVector, value: String, label: String, iconColor: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = iconColor,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(iconColor.copy(alpha = 0.1f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconColor,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            fontWeight = FontWeight.Medium
         )
     }
 }
 
 @Composable
 fun IngredientsListExpressive(ingredients: List<Pair<String, String>>) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         ingredients.forEach { (ingredient, measure) ->
-            Row(
+            IngredientItem(ingredient, measure)
+        }
+    }
+}
+
+@Composable
+fun IngredientItem(ingredient: String, measure: String) {
+    var isChecked by remember { mutableStateOf(false) }
+    val animatedAlpha by animateFloatAsState(if (isChecked) 0.5f else 1f, label = "alpha")
+    val animatedColor by animateColorAsState(
+        if (isChecked) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceContainer,
+        label = "color"
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .background(animatedColor)
+            .clickable { isChecked = !isChecked }
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f, fill = false)
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainer)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (isChecked) MaterialTheme.colorScheme.primary 
+                        else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                if (isChecked) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                } else {
                     Box(
                         modifier = Modifier
-                            .size(12.dp)
+                            .size(10.dp)
                             .clip(CircleShape)
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        MaterialTheme.colorScheme.primary,
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    )
-                                )
-                            )
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        ingredient,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold
+                            .background(MaterialTheme.colorScheme.primary)
                     )
                 }
-                Text(
-                    measure,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
             }
+            Spacer(modifier = Modifier.width(14.dp))
+            Text(
+                ingredient,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    textDecoration = if (isChecked) TextDecoration.LineThrough else TextDecoration.None
+                ),
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.alpha(animatedAlpha),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
         }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(
+            measure,
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (isChecked) MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) else MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.ExtraBold,
+            textAlign = TextAlign.End,
+            modifier = Modifier
+                .weight(1.2f, fill = false)
+                .alpha(animatedAlpha)
+        )
     }
 }
 
