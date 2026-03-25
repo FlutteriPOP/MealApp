@@ -1,4 +1,5 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
@@ -12,38 +13,92 @@
 
         <!-- Pot Base -->
         <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M20,45 L88,45 L88,75 C88,82 82,88 75,88 L33,88 C26,88 20,82 20,75 Z" />
+            android:pathData="M20,45 L88,45 L88,75 C88,82 82,88 75,88 L33,88 C26,88 20,82 20,75 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="54"
+                    android:centerY="66"
+                    android:gradientRadius="40"
+                    android:startColor="#FFEB3B"
+                    android:centerColor="#FF5722"
+                    android:endColor="#B71C1C" />
+            </aapt:attr>
+        </path>
 
-        <!-- Pot Handles -->
+        <!-- Pot Handle Left -->
         <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M12,50 L20,50 L20,65 L12,65 C10,65 8,63 8,61 L8,54 C8,52 10,50 12,50 Z" />
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M96,50 L88,50 L88,65 L96,65 C98,65 100,63 100,61 L100,54 C100,52 98,50 96,50 Z" />
+            android:pathData="M12,50 L20,50 L20,65 L12,65 C10,65 8,63 8,61 L8,54 C8,52 10,50 12,50 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="14"
+                    android:centerY="57"
+                    android:gradientRadius="15"
+                    android:startColor="#FF9800"
+                    android:endColor="#B71C1C" />
+            </aapt:attr>
+        </path>
 
-        <!-- Pot Lid -->
+        <!-- Pot Handle Right -->
         <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M25,40 L83,40 L83,45 L25,45 Z" />
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M48,34 L60,34 L60,40 L48,40 Z" />
+            android:pathData="M96,50 L88,50 L88,65 L96,65 C98,65 100,63 100,61 L100,54 C100,52 98,50 96,50 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="94"
+                    android:centerY="57"
+                    android:gradientRadius="15"
+                    android:startColor="#FF9800"
+                    android:endColor="#B71C1C" />
+            </aapt:attr>
+        </path>
 
-        <!-- Steam Lines -->
+        <!-- Pot Lid Bar -->
         <path
-            android:strokeColor="#FFFFFF"
+            android:pathData="M25,40 L83,40 L83,45 L25,45 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="54"
+                    android:centerY="42"
+                    android:gradientRadius="30"
+                    android:startColor="#FFCC02"
+                    android:endColor="#E64A19" />
+            </aapt:attr>
+        </path>
+
+        <!-- Lid Knob -->
+        <path
+            android:pathData="M48,34 L60,34 L60,40 L48,40 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:type="radial"
+                    android:centerX="54"
+                    android:centerY="37"
+                    android:gradientRadius="10"
+                    android:startColor="#FFEB3B"
+                    android:endColor="#E64A19" />
+            </aapt:attr>
+        </path>
+
+        <!-- Steam Line 1 -->
+        <path
+            android:strokeColor="#FF9800"
             android:strokeWidth="4"
             android:strokeLineCap="round"
             android:pathData="M40,25 Q44,15 40,10" />
+
+        <!-- Steam Line 2 -->
         <path
-            android:strokeColor="#FFFFFF"
+            android:strokeColor="#FF5722"
             android:strokeWidth="4"
             android:strokeLineCap="round"
             android:pathData="M54,25 Q58,15 54,10" />
+
+        <!-- Steam Line 3 -->
         <path
-            android:strokeColor="#FFFFFF"
+            android:strokeColor="#FF9800"
             android:strokeWidth="4"
             android:strokeLineCap="round"
             android:pathData="M68,25 Q72,15 68,10" />

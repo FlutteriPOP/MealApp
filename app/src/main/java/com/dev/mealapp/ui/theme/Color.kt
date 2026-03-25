@@ -6,59 +6,59 @@ import androidx.compose.ui.graphics.Color
 // LIGHT THEME
 // =======================
 
-val Primary = Color(0xFFEE5A24)
+val Primary = Color(0xFF4F46E5) // Indigo
 val OnPrimary = Color(0xFFFFFFFF)
 
-val PrimaryContainer = Color(0xFFFFE9E2)
-val OnPrimaryContainer = Color(0xFF3A0E00)
+val PrimaryContainer = Color(0xFFE0E7FF)
+val OnPrimaryContainer = Color(0xFF0B0F3B)
 
-val Secondary = Color(0xFF344955)
+val Secondary = Color(0xFF475569) // Slate
 val OnSecondary = Color(0xFFFFFFFF)
 
-val SecondaryContainer = Color(0xFFD9E6EC)
-val OnSecondaryContainer = Color(0xFF0F1F26)
+val SecondaryContainer = Color(0xFFE2E8F0)
+val OnSecondaryContainer = Color(0xFF0F172A)
 
-val Tertiary = Color(0xFF00A8A8)
+val Tertiary = Color(0xFF10B981) // Emerald
 val OnTertiary = Color(0xFFFFFFFF)
 
-val TertiaryContainer = Color(0xFFD6F4F4)
-val OnTertiaryContainer = Color(0xFF002F2F)
+val TertiaryContainer = Color(0xFFD1FAE5)
+val OnTertiaryContainer = Color(0xFF022C22)
 
-val Background = Color(0xFFF8F9FB)
-val OnBackground = Color(0xFF1A1D21)
+val Background = Color(0xFFF8FAFC)
+val OnBackground = Color(0xFF0F172A)
 
 val Surface = Color(0xFFFFFFFF)
-val OnSurface = Color(0xFF1A1D21)
+val OnSurface = Color(0xFF0F172A)
 
-val Outline = Color(0xFFD0D5DD)
+val Outline = Color(0xFFE2E8F0)
 
 
 // =======================
 // DARK THEME
 // =======================
 
-val PrimaryDark = Color(0xFFFF8A65)
-val OnPrimaryDark = Color(0xFF2A0E05)
+val PrimaryDark = Color(0xFF818CF8)
+val OnPrimaryDark = Color(0xFF1E1B4B)
 
-val PrimaryContainerDark = Color(0xFF5C1F0D)
-val OnPrimaryContainerDark = Color(0xFFFFDBD1)
+val PrimaryContainerDark = Color(0xFF312E81)
+val OnPrimaryContainerDark = Color(0xFFE0E7FF)
 
-val SecondaryDark = Color(0xFF9DB4C0)
-val OnSecondaryDark = Color(0xFF0F1F26)
+val SecondaryDark = Color(0xFF94A3B8)
+val OnSecondaryDark = Color(0xFF0F172A)
 
-val SecondaryContainerDark = Color(0xFF1F2F36)
-val OnSecondaryContainerDark = Color(0xFFD9E6EC)
+val SecondaryContainerDark = Color(0xFF1E293B)
+val OnSecondaryContainerDark = Color(0xFFE2E8F0)
 
-val TertiaryDark = Color(0xFF4FD1C5)
-val OnTertiaryDark = Color(0xFF003734)
+val TertiaryDark = Color(0xFF34D399)
+val OnTertiaryDark = Color(0xFF022C22)
 
-val TertiaryContainerDark = Color(0xFF004F4F)
-val OnTertiaryContainerDark = Color(0xFFD6F4F4)
+val TertiaryContainerDark = Color(0xFF064E3B)
+val OnTertiaryContainerDark = Color(0xFFD1FAE5)
 
-val BackgroundDark = Color(0xFF0F1115)
-val OnBackgroundDark = Color(0xFFE6EAF0)
+val BackgroundDark = Color(0xFF020617)
+val OnBackgroundDark = Color(0xFFE2E8F0)
 
-val SurfaceDark = Color(0xFF161A1F)
-val OnSurfaceDark = Color(0xFFE6EAF0)
+val SurfaceDark = Color(0xFF020617)
+val OnSurfaceDark = Color(0xFFE2E8F0)
 
-val OutlineDark = Color(0xFF3A3F45)
+val OutlineDark = Color(0xFF1E293B)

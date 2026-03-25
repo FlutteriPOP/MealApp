@@ -56,7 +56,6 @@ fun ErrorView(error: String, onRetry: () -> Unit, modifier: Modifier = Modifier)
         modifier = modifier.padding(24.dp),
         shape = RoundedCornerShape(32.dp),
         color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f),
-        tonalElevation = 4.dp
     ) {
         Column(
             modifier = Modifier.padding(32.dp),

@@ -49,8 +49,6 @@ object AppBars {
                         .padding(start = 12.dp)
                         .size(44.dp),
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    tonalElevation = 2.dp
                 ) {
                     IconButton(onClick = onBackClick) {
                         Icon(
