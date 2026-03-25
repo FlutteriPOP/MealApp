@@ -38,9 +38,11 @@ fun MealsScreen(
         topBar = { AppBars.MealAppBar(title = categoryName, onBackClick = onBackClick) },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             when {
                 viewState.loading -> {
                     LoadingView(Modifier.align(Alignment.Center))

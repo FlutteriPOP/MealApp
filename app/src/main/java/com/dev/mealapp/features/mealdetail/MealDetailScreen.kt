@@ -30,12 +30,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -56,19 +58,29 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.dev.mealapp.data.model.MealDetail
 import com.dev.mealapp.ui.components.BadgeExpressive
 import com.dev.mealapp.ui.components.ErrorView
 import com.dev.mealapp.ui.components.LoadingView
 import com.dev.mealapp.ui.components.YoutubePlayer
+import com.dev.mealapp.ui.theme.MealAppTheme
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,26 +120,24 @@ fun MealDetailScreen(
                 }
             }
 
-            // Floating Back Button with Glassmorphism
-            Surface(
+            // Floating Back Button
+            IconButton(
                 onClick = onBackClick,
                 modifier = Modifier
                     .statusBarsPadding()
                     .padding(16.dp)
-                    .size(48.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                tonalElevation = 8.dp,
-                shadowElevation = 4.dp
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(24.dp)
+                    .size(40.dp)
+                    .background(
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                        CircleShape
                     )
-                }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
     }
@@ -152,7 +162,7 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
+                .aspectRatio(1.1f)
                 .graphicsLayer {
                     translationY = scrollState.value * 0.5f
                 }
@@ -173,7 +183,7 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                 } else {
                     Image(
                         painter = rememberAsyncImagePainter(meal.strMealThumb),
-                        contentDescription = null,
+                        contentDescription = "Meal Image",
                         modifier = Modifier
                             .fillMaxSize()
                             .scale(imageScale),
@@ -181,10 +191,11 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                     )
 
                     if (hasVideo) {
+                        // Preload video in a hidden box to check readiness
                         Box(
                             modifier = Modifier
                                 .size(1.dp)
-                                .clip(CircleShape)
+                                .alpha(0f)
                         ) {
                             YoutubePlayer(
                                 youtubeUrl = meal.strYoutube,
@@ -202,9 +213,9 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                     .background(
                         Brush.verticalGradient(
                             listOf(
-                                Color.Black.copy(alpha = 0.2f),
+                                Color.Black.copy(alpha = 0.3f),
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.8f)
+                                Color.Black.copy(alpha = 0.7f)
                             )
                         )
                     )
@@ -213,41 +224,39 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(24.dp)
-                    .padding(bottom = 48.dp)
+                    .padding(20.dp)
+                    .padding(bottom = 30.dp)
             ) {
                 BadgeExpressive(
                     text = meal.strCategory,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     textColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = meal.strMeal,
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        lineHeight = 36.sp,
-                        letterSpacing = (-0.5).sp
-                    ),
-                    color = Color.White,
-                    fontWeight = FontWeight.ExtraBold
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White,
+                    )
                 )
             }
         }
 
-        // Refined Content Section
+        // Content Section
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = (-40).dp),
-            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+                .offset(y = (-30).dp),
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
             color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 2.dp
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
             ) {
                 val estimatedTime = remember(ingredients) { "${ingredients.size * 5 + 10} min" }
-                val estimatedCalories = remember(ingredients) { "${ingredients.size * 45 + 100} kcal" }
+                val estimatedCalories =
+                    remember(ingredients) { "${ingredients.size * 45 + 100} kcal" }
                 val difficulty = remember(ingredients) {
                     when {
                         ingredients.size > 12 -> "Hard"
@@ -256,18 +265,33 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                     }
                 }
 
-                // Premium Quick Info Card
+                // Info Card
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(24.dp))
                         .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                        .padding(vertical = 20.dp, horizontal = 8.dp),
+                        .padding(vertical = 24.dp, horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    QuickInfoItem(Icons.Default.Timer, estimatedTime, "Time", MaterialTheme.colorScheme.primary)
-                    QuickInfoItem(Icons.Default.Whatshot, estimatedCalories, "Calories", MaterialTheme.colorScheme.error)
-                    QuickInfoItem(Icons.Default.KeyboardArrowUp, difficulty, "Level", MaterialTheme.colorScheme.secondary)
+                    QuickInfoItem(
+                        Icons.Default.Timer,
+                        estimatedTime,
+                        "Time",
+                        MaterialTheme.colorScheme.primary
+                    )
+                    QuickInfoItem(
+                        Icons.Default.Whatshot,
+                        estimatedCalories,
+                        "Calories",
+                        MaterialTheme.colorScheme.error
+                    )
+                    QuickInfoItem(
+                        Icons.Default.KeyboardArrowUp,
+                        difficulty,
+                        "Level",
+                        MaterialTheme.colorScheme.secondary
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -281,18 +305,17 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                         Text(
                             "Ingredients",
                             style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            fontWeight = FontWeight.ExtraBold
                         )
                         Text(
-                            "${ingredients.size} items to prepare",
+                            "${ingredients.size} items",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
                     }
                     BadgeExpressive(
                         text = meal.strArea,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         textColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
@@ -305,28 +328,29 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                 Text(
                     "Method",
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontWeight = FontWeight.ExtraBold
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(28.dp),
+                    shape = RoundedCornerShape(24.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerLow,
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(24.dp)
+                            .padding(20.dp)
                             .animateContentSize()
-                            .clickable { isExpanded = !isExpanded }
+                            .clickable(
+                                onClickLabel = if (isExpanded) "Collapse recipe" else "Expand recipe",
+                                role = Role.Button
+                            ) { isExpanded = !isExpanded }
                     ) {
                         SelectionContainer {
                             Text(
                                 text = meal.strInstructions,
                                 style = MaterialTheme.typography.bodyLarge.copy(
-                                    lineHeight = 30.sp,
-                                    letterSpacing = 0.2.sp
+                                    lineHeight = 28.sp
                                 ),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = if (isExpanded) Int.MAX_VALUE else 6,
@@ -335,27 +359,26 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
                         }
 
                         Row(
-                            modifier = Modifier.padding(top = 20.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = if (isExpanded) "Show Less" else "Read Full Recipe",
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.ExtraBold
+                                fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
                             Icon(
                                 imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(120.dp))
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
     }
@@ -363,32 +386,39 @@ fun MealDetailContent(meal: MealDetail, modifier: Modifier = Modifier) {
 
 @Composable
 fun QuickInfoItem(icon: ImageVector, value: String, label: String, iconColor: Color) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.semantics(mergeDescendants = true) {
+            contentDescription = "$label: $value"
+        }
+    ) {
         Box(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(iconColor.copy(alpha = 0.1f)),
+                .background(iconColor.copy(alpha = 0.12f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(28.dp)
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = (-0.5).sp
+            ),
             color = MaterialTheme.colorScheme.onSurface
         )
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
             fontWeight = FontWeight.Medium
         )
     }
@@ -396,7 +426,7 @@ fun QuickInfoItem(icon: ImageVector, value: String, label: String, iconColor: Co
 
 @Composable
 fun IngredientsListExpressive(ingredients: List<Pair<String, String>>) {
-    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         ingredients.forEach { (ingredient, measure) ->
             IngredientItem(ingredient, measure)
         }
@@ -406,78 +436,88 @@ fun IngredientsListExpressive(ingredients: List<Pair<String, String>>) {
 @Composable
 fun IngredientItem(ingredient: String, measure: String) {
     var isChecked by remember { mutableStateOf(false) }
-    val animatedAlpha by animateFloatAsState(if (isChecked) 0.5f else 1f, label = "alpha")
+    val animatedAlpha by animateFloatAsState(if (isChecked) 0.6f else 1f, label = "alpha")
     val animatedColor by animateColorAsState(
-        if (isChecked) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceContainer,
+        if (isChecked) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceContainerLow,
         label = "color"
     )
 
-    Row(
+    Surface(
+        onClick = { isChecked = !isChecked },
+        shape = RoundedCornerShape(20.dp),
+        color = animatedColor,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
-            .background(animatedColor)
-            .clickable { isChecked = !isChecked }
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .semantics {
+                role = Role.Button
+                contentDescription =
+                    if (isChecked) "Unmark ingredient: $ingredient" else "Mark ingredient: $ingredient"
+                onClick(label = if (isChecked) "Unmark" else "Mark") {
+                    isChecked = !isChecked
+                    true
+                }
+            }
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.weight(1f, fill = false)
+            modifier = Modifier
+                .padding(12.dp)
+                .alpha(animatedAlpha),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(CircleShape)
-                    .background(
-                        if (isChecked) MaterialTheme.colorScheme.primary 
-                        else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
-                    ),
-                contentAlignment = Alignment.Center
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
             ) {
-                if (isChecked) {
-                    Icon(
-                        Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
+                // Ingredient Thumbnail
+                Surface(
+                    modifier = Modifier.size(50.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White,
+                ) {
+                    val encodedIngredient = remember(ingredient) {
+                        URLEncoder.encode(ingredient, StandardCharsets.UTF_8.toString())
+                    }
+                    AsyncImage(
+                        model = "https://www.themealdb.com/images/ingredients/${encodedIngredient}-Small.png",
+                        contentDescription = "Ingredient: $ingredient",
+                        modifier = Modifier.padding(4.dp),
+                        contentScale = ContentScale.Fit,
+                        error = rememberVectorPainter(Icons.Default.Fastfood),
+                        fallback = rememberVectorPainter(Icons.Default.Fastfood)
                     )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    Text(
+                        ingredient,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            textDecoration = if (isChecked) TextDecoration.LineThrough else TextDecoration.None
+                        ),
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        measure,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
-            Spacer(modifier = Modifier.width(14.dp))
-            Text(
-                ingredient,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    textDecoration = if (isChecked) TextDecoration.LineThrough else TextDecoration.None
+
+            Icon(
+                imageVector = Icons.Default.CheckCircle,
+                contentDescription = if (isChecked) "Checked" else "Unchecked",
+                tint = if (isChecked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.2f
                 ),
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.alpha(animatedAlpha),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2
+                modifier = Modifier.size(26.dp)
             )
         }
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Text(
-            measure,
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (isChecked) MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) else MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.ExtraBold,
-            textAlign = TextAlign.End,
-            modifier = Modifier
-                .weight(1.2f, fill = false)
-                .alpha(animatedAlpha)
-        )
     }
 }
 
@@ -506,3 +546,67 @@ fun MealDetail.extractIngredients(): List<Pair<String, String>> {
     ).filter { it.first?.isNotBlank() == true }
         .map { it.first!! to (it.second ?: "") }
 }
+
+@Preview(showBackground = true, name = "Light Mode")
+@Composable
+fun MealDetailPreview() {
+    val mockMeal = MealDetail(
+        idMeal = "52772",
+        strMeal = "Teriyaki Chicken Casserole",
+        strMealAlternate = null,
+        strMealThumb = "https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg",
+        strInstructions = "Preheat oven to 350° F. Spray a 9x13-inch baking pan with non-stick spray.\nCombine cooked rice, chicken and vegetables in a large mixing bowl and set aside.\nIn a small saucepan, combine the soy sauce, water, brown sugar, ginger and garlic powder and bring to a boil over medium-high heat. In a small bowl, combine the cornstarch and water slowly and whisk into the boiling sauce. Simmer until sauce thickens.\nPour sauce over the rice mixture and stir to coat evenly. Pour into prepared pan and bake for 20 minutes until heated through.",
+        strCategory = "Chicken",
+        strArea = "Japanese",
+        strTags = "Meat,Casserole",
+        strYoutube = "https://www.youtube.com/watch?v=4aZr5hZXP_s",
+        strSource = null,
+        strImageSource = null,
+        strCreativeCommonsConfirmed = null,
+        dateModified = null,
+        strIngredient1 = "soy sauce",
+        strIngredient2 = "water",
+        strIngredient3 = "brown sugar",
+        strIngredient4 = "ground ginger",
+        strIngredient5 = "garlic powder",
+        strIngredient6 = "cornstarch",
+        strIngredient7 = "chicken breasts",
+        strIngredient8 = "stir-fry vegetables",
+        strIngredient9 = "brown rice",
+        strIngredient10 = "",
+        strIngredient11 = "",
+        strIngredient12 = "",
+        strIngredient13 = "",
+        strIngredient14 = "",
+        strIngredient15 = "",
+        strIngredient16 = "",
+        strIngredient17 = "",
+        strIngredient18 = "",
+        strIngredient19 = "",
+        strIngredient20 = "",
+        strMeasure1 = "3/4 cup",
+        strMeasure2 = "1/2 cup",
+        strMeasure3 = "1/4 cup",
+        strMeasure4 = "1/2 teaspoon",
+        strMeasure5 = "1/2 teaspoon",
+        strMeasure6 = "4 tablespoons",
+        strMeasure7 = "2",
+        strMeasure8 = "1 (12 oz.) [frozen]",
+        strMeasure9 = "3 cups",
+        strMeasure10 = "",
+        strMeasure11 = "",
+        strMeasure12 = "",
+        strMeasure13 = "",
+        strMeasure14 = "",
+        strMeasure15 = "",
+        strMeasure16 = "",
+        strMeasure17 = "",
+        strMeasure18 = "",
+        strMeasure19 = "",
+        strMeasure20 = ""
+    )
+    MealAppTheme {
+        MealDetailContent(meal = mockMeal)
+    }
+}
+

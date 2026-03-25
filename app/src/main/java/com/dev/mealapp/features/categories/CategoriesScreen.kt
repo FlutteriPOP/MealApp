@@ -32,17 +32,19 @@ fun CategoriesScreen(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { 
+        topBar = {
             AppBars.CategoriesAppBar(
                 onSearchClick = onSearchClick,
                 scrollBehavior = scrollBehavior
-            ) 
+            )
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             when {
                 viewState.loading -> {
                     LoadingView(Modifier.align(Alignment.Center))

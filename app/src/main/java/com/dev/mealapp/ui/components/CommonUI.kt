@@ -1,6 +1,7 @@
 package com.dev.mealapp.ui.components
 
-import androidx.compose.foundation.clickable
+import android.content.Intent
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,10 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.net.toUri
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -124,6 +128,7 @@ fun BadgeExpressive(
 
 @Composable
 fun YoutubePlayer(youtubeUrl: String, modifier: Modifier = Modifier, onReady: () -> Unit) {
+    val context = LocalContext.current
     val videoId = remember(youtubeUrl) {
         try {
             if (youtubeUrl.contains("v=")) {
@@ -177,11 +182,22 @@ fun YoutubePlayer(youtubeUrl: String, modifier: Modifier = Modifier, onReady: ()
                 view.release()
             }
         )
+        // Overlay Box to capture gestures
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .clickable(enabled = true, onClick = {})
+                .pointerInput(youtubeUrl) {
+                    detectTapGestures(
+                        onLongPress = {
+                            try {
+                                val intent = Intent(Intent.ACTION_VIEW, youtubeUrl.toUri())
+                                context.startActivity(intent)
+                            } catch (_: Exception) {
+                                // Fallback or handle if YouTube is not installed
+                            }
+                        }
+                    )
+                }
         )
     }
 }
-
